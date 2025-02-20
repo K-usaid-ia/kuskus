@@ -1,8 +1,52 @@
 "use client";
+
 import { useState, useEffect } from 'react';
 import ActivityItem from './ActivityItem';
 
-const mockActivities = [
+type ActivityStatus = 'completed' | 'pending' | 'failed';
+type ActivityType = 'donation' | 'milestone' | 'vendor_verification' | 'project_creation';
+
+interface BaseActivity {
+  id: string;
+  type: ActivityType;
+  status: ActivityStatus;
+  timestamp: string;
+}
+
+interface DonationActivity extends BaseActivity {
+  type: 'donation';
+  data: {
+    amount: number;
+    projectTitle: string;
+    transactionHash: string;
+  }
+}
+
+interface MilestoneActivity extends BaseActivity {
+  type: 'milestone';
+  data: {
+    projectTitle: string;
+    milestoneTitle: string;
+  }
+}
+
+interface VendorVerificationActivity extends BaseActivity {
+  type: 'vendor_verification';
+  data: {
+    vendorName: string;
+  }
+}
+
+interface ProjectCreationActivity extends BaseActivity {
+  type: 'project_creation';
+  data: {
+    projectTitle: string;
+  }
+}
+
+type Activity = DonationActivity | MilestoneActivity | VendorVerificationActivity | ProjectCreationActivity;
+
+const mockActivities: Activity[] = [
   {
     id: '1',
     type: 'donation',
@@ -23,19 +67,18 @@ const mockActivities = [
       projectTitle: 'Medical Supplies Distribution',
       milestoneTitle: 'Supply Delivery Phase 1'
     }
-  },
-  // Add more mock activities as needed
+  }
 ];
 
 export default function ActivityFeed() {
-  const [activities, setActivities] = useState(mockActivities);
+  const [activities, setActivities] = useState<Activity[]>(mockActivities);
 
   useEffect(() => {
     // Simulate real-time updates
     const interval = setInterval(() => {
       // Add new activity occasionally
       if (Math.random() > 0.7) {
-        const newActivity = {
+        const newActivity: DonationActivity = {
           id: Date.now().toString(),
           type: 'donation',
           status: 'completed',
@@ -68,3 +111,6 @@ export default function ActivityFeed() {
     </div>
   );
 }
+
+// You should also update ActivityItem.tsx to use these types:
+export type { Activity, ActivityStatus, ActivityType };

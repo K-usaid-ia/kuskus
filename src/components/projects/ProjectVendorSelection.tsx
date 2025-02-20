@@ -1,14 +1,20 @@
 "use client";
+
 import { useState } from 'react';
 import { mockVendors } from '@/utils/mockData';
+import { Vendor } from '@/types/schema';
 
 interface ProjectVendorSelectionProps {
   onBack: () => void;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: { selectedVendors: Record<string, boolean> }) => void;
+}
+
+interface SelectedVendorsState {
+  [vendorId: string]: boolean;
 }
 
 export default function ProjectVendorSelection({ onBack, onSubmit }: ProjectVendorSelectionProps) {
-  const [selectedVendors, setSelectedVendors] = useState({});
+  const [selectedVendors, setSelectedVendors] = useState<SelectedVendorsState>({});
 
   return (
     <div className="space-y-6">
