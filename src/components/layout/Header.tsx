@@ -1,4 +1,4 @@
-// src/components/layout/Header.tsx
+"use client";
 import { useState } from 'react';
 import { BellIcon } from '@heroicons/react/24/outline';
 
