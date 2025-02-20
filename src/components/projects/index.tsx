@@ -1,4 +1,3 @@
-// src/pages/projects/index.tsx
 import { useState } from 'react';
 import { mockProjects } from '@/utils/mockData';
 import ProjectCard from '@/components/projects/ProjectCard';

@@ -1,4 +1,3 @@
-// src/components/projects/ProjectCard.tsx
 import { FC } from 'react';
 import { Project } from '@/types/schema';
 
