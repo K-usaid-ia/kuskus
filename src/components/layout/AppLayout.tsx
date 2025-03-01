@@ -1,7 +1,7 @@
 // src/components/layout/AppLayout.tsx
-import { FC, ReactNode } from 'react';
-import Sidebar from './Sidebar';
-import Header from './Header';
+import { FC, ReactNode } from "react";
+import Sidebar from "./Sidebar";
+import Header from "./Header";
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -13,9 +13,7 @@ const AppLayout: FC<AppLayoutProps> = ({ children }) => {
       <Sidebar />
       <div className="ml-64">
         <Header />
-        <main className="p-8">
-          {children}
-        </main>
+        <main className="p-8">{children}</main>
       </div>
     </div>
   );

@@ -29,7 +29,9 @@ export default function ProjectsList({ projects }: { projects: Project[] }) {
               <div className="mt-4 flex items-center text-sm text-gray-500">
                 <span>${project.budget.toLocaleString()}</span>
                 <span className="mx-2">•</span>
-                <span>{project.location.city}, {project.location.country}</span>
+                <span>
+                  {project.location.city}, {project.location.country}
+                </span>
               </div>
             </Link>
           ))}

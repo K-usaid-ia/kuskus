@@ -1,6 +1,6 @@
 "use client";
-import { useState } from 'react';
-import { Project } from '@/types/schema';
+import { useState } from "react";
+import { Project } from "@/types/schema";
 
 interface DonationFormProps {
   project: Project;
@@ -8,7 +8,7 @@ interface DonationFormProps {
 }
 
 export default function DonationForm({ project, onDonate }: DonationFormProps) {
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
 
   const predefinedAmounts = [10, 50, 100, 500];
@@ -18,9 +18,9 @@ export default function DonationForm({ project, onDonate }: DonationFormProps) {
     setLoading(true);
     try {
       await onDonate(Number(amount));
-      setAmount('');
+      setAmount("");
     } catch (error) {
-      console.error('Donation failed:', error);
+      console.error("Donation failed:", error);
     } finally {
       setLoading(false);
     }
@@ -41,8 +41,8 @@ export default function DonationForm({ project, onDonate }: DonationFormProps) {
                 onClick={() => setAmount(preset.toString())}
                 className={`flex-1 py-2 px-4 rounded-md border ${
                   amount === preset.toString()
-                    ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
-                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                    ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                    : "border-gray-300 text-gray-700 hover:bg-gray-50"
                 }`}
               >
                 ${preset}
@@ -72,7 +72,7 @@ export default function DonationForm({ project, onDonate }: DonationFormProps) {
         disabled={loading || !amount}
         className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-400"
       >
-        {loading ? 'Processing...' : 'Donate Now'}
+        {loading ? "Processing..." : "Donate Now"}
       </button>
     </form>
   );

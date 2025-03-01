@@ -38,9 +38,11 @@ export default function DashboardStats() {
             <span className="text-2xl font-semibold text-gray-900">
               {stat.value}
             </span>
-            <span className={`ml-2 text-sm font-medium ${
-              stat.trend === 'up' ? 'text-green-600' : 'text-red-600'
-            }`}>
+            <span
+              className={`ml-2 text-sm font-medium ${
+                stat.trend === "up" ? "text-green-600" : "text-red-600"
+              }`}
+            >
               {stat.change}
             </span>
           </p>
@@ -50,7 +52,6 @@ export default function DashboardStats() {
   );
 }
 
-
 // export default function DashboardStats() {
 //     const stats = [
 //       { name: 'Total Projects', value: '12', change: '+2', changeType: 'increase' },
@@ -58,7 +59,7 @@ export default function DashboardStats() {
 //       { name: 'Verified Vendors', value: '23', change: '+3', changeType: 'increase' },
 //       { name: 'Total Donations', value: '$125,000', change: '+12%', changeType: 'increase' },
 //     ];
-  
+
 //     return (
 //       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 //         {stats.map((stat) => (
@@ -82,4 +83,3 @@ export default function DashboardStats() {
 //       </div>
 //     );
 //   }
-  

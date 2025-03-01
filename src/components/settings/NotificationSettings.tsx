@@ -1,11 +1,17 @@
-'use client';
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+"use client";
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface NotificationPreferences {
   email: {
@@ -14,7 +20,7 @@ interface NotificationPreferences {
     donations: boolean;
     vendorUpdates: boolean;
   };
-  frequency: 'instant' | 'daily' | 'weekly';
+  frequency: "instant" | "daily" | "weekly";
   pushNotifications: boolean;
 }
 
@@ -28,17 +34,18 @@ const defaultPreferences: NotificationPreferences = {
     projectUpdates: true,
     milestoneCompletion: true,
     donations: true,
-    vendorUpdates: false
+    vendorUpdates: false,
   },
-  frequency: 'instant',
-  pushNotifications: true
+  frequency: "instant",
+  pushNotifications: true,
 };
 
 export default function NotificationSettings({
   initialPreferences = defaultPreferences,
-  onSave
+  onSave,
 }: NotificationSettingsProps) {
-  const [preferences, setPreferences] = useState<NotificationPreferences>(initialPreferences);
+  const [preferences, setPreferences] =
+    useState<NotificationPreferences>(initialPreferences);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -53,19 +60,26 @@ export default function NotificationSettings({
       await onSave?.(preferences);
       setSuccess(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update notification settings');
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to update notification settings",
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
-  const updateEmailPreference = (key: keyof typeof preferences.email, value: boolean) => {
-    setPreferences(prev => ({
+  const updateEmailPreference = (
+    key: keyof typeof preferences.email,
+    value: boolean,
+  ) => {
+    setPreferences((prev) => ({
       ...prev,
       email: {
         ...prev.email,
-        [key]: value
-      }
+        [key]: value,
+      },
     }));
   };
 
@@ -83,7 +97,9 @@ export default function NotificationSettings({
           )}
           {success && (
             <Alert>
-              <AlertDescription>Notification settings updated successfully!</AlertDescription>
+              <AlertDescription>
+                Notification settings updated successfully!
+              </AlertDescription>
             </Alert>
           )}
 
@@ -92,12 +108,17 @@ export default function NotificationSettings({
             {Object.entries(preferences.email).map(([key, value]) => (
               <div key={key} className="flex items-center justify-between">
                 <Label htmlFor={`email-${key}`} className="flex-grow">
-                  {key.split(/(?=[A-Z])/).join(' ')}
+                  {key.split(/(?=[A-Z])/).join(" ")}
                 </Label>
                 <Switch
                   id={`email-${key}`}
                   checked={value}
-                  onCheckedChange={(checked) => updateEmailPreference(key as keyof typeof preferences.email, checked)}
+                  onCheckedChange={(checked) =>
+                    updateEmailPreference(
+                      key as keyof typeof preferences.email,
+                      checked,
+                    )
+                  }
                 />
               </div>
             ))}
@@ -107,8 +128,8 @@ export default function NotificationSettings({
             <h3 className="text-sm font-medium">Notification Frequency</h3>
             <Select
               value={preferences.frequency}
-              onValueChange={(value: 'instant' | 'daily' | 'weekly') => 
-                setPreferences(prev => ({ ...prev, frequency: value }))
+              onValueChange={(value: "instant" | "daily" | "weekly") =>
+                setPreferences((prev) => ({ ...prev, frequency: value }))
               }
             >
               <SelectTrigger>
@@ -131,15 +152,18 @@ export default function NotificationSettings({
               <Switch
                 id="push-notifications"
                 checked={preferences.pushNotifications}
-                onCheckedChange={(checked) => 
-                  setPreferences(prev => ({ ...prev, pushNotifications: checked }))
+                onCheckedChange={(checked) =>
+                  setPreferences((prev) => ({
+                    ...prev,
+                    pushNotifications: checked,
+                  }))
                 }
               />
             </div>
           </div>
 
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Saving...' : 'Save Changes'}
+            {isLoading ? "Saving..." : "Save Changes"}
           </Button>
         </form>
       </CardContent>

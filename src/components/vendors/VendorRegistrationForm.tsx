@@ -1,28 +1,30 @@
 "use client";
-import { useState } from 'react';
-import { VendorCategory } from '@/types/schema';
+import { useState } from "react";
+import { VendorCategory } from "@/types/schema";
 
 interface VendorRegistrationFormProps {
   onComplete: (data: any) => void;
 }
 
-export default function VendorRegistrationForm({ onComplete }: VendorRegistrationFormProps) {
+export default function VendorRegistrationForm({
+  onComplete,
+}: VendorRegistrationFormProps) {
   const [formData, setFormData] = useState({
-    business_name: '',
-    business_registration: '',
+    business_name: "",
+    business_registration: "",
     service_categories: [] as VendorCategory[],
-    contact_email: '',
-    phone_number: '',
-    wallet_address: ''
+    contact_email: "",
+    phone_number: "",
+    wallet_address: "",
   });
 
   const categories: VendorCategory[] = [
-    'construction',
-    'supplies',
-    'logistics',
-    'medical',
-    'education',
-    'other'
+    "construction",
+    "supplies",
+    "logistics",
+    "medical",
+    "education",
+    "other",
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -39,7 +41,9 @@ export default function VendorRegistrationForm({ onComplete }: VendorRegistratio
         <input
           type="text"
           value={formData.business_name}
-          onChange={(e) => setFormData({ ...formData, business_name: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, business_name: e.target.value })
+          }
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
           required
         />
@@ -52,7 +56,9 @@ export default function VendorRegistrationForm({ onComplete }: VendorRegistratio
         <input
           type="text"
           value={formData.business_registration}
-          onChange={(e) => setFormData({ ...formData, business_registration: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, business_registration: e.target.value })
+          }
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
           required
         />
@@ -63,7 +69,7 @@ export default function VendorRegistrationForm({ onComplete }: VendorRegistratio
           Service Categories
         </label>
         <div className="mt-2 grid grid-cols-2 gap-2">
-          {categories.map(category => (
+          {categories.map((category) => (
             <label key={category} className="inline-flex items-center">
               <input
                 type="checkbox"
@@ -71,8 +77,11 @@ export default function VendorRegistrationForm({ onComplete }: VendorRegistratio
                 onChange={(e) => {
                   const newCategories = e.target.checked
                     ? [...formData.service_categories, category]
-                    : formData.service_categories.filter(c => c !== category);
-                  setFormData({ ...formData, service_categories: newCategories });
+                    : formData.service_categories.filter((c) => c !== category);
+                  setFormData({
+                    ...formData,
+                    service_categories: newCategories,
+                  });
                 }}
                 className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
               />
@@ -92,7 +101,9 @@ export default function VendorRegistrationForm({ onComplete }: VendorRegistratio
           <input
             type="email"
             value={formData.contact_email}
-            onChange={(e) => setFormData({ ...formData, contact_email: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, contact_email: e.target.value })
+            }
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             required
           />
@@ -104,7 +115,9 @@ export default function VendorRegistrationForm({ onComplete }: VendorRegistratio
           <input
             type="tel"
             value={formData.phone_number}
-            onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, phone_number: e.target.value })
+            }
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             required
           />
@@ -118,7 +131,9 @@ export default function VendorRegistrationForm({ onComplete }: VendorRegistratio
         <input
           type="text"
           value={formData.wallet_address}
-          onChange={(e) => setFormData({ ...formData, wallet_address: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, wallet_address: e.target.value })
+          }
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
           placeholder="0x..."
           required

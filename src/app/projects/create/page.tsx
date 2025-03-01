@@ -1,17 +1,17 @@
 "use client";
-import { useState } from 'react';
-import ProjectBasicInfo from '@/components/projects/ProjectBasicInfo';
-import ProjectMilestoneSetup from '@/components/projects/ProjectMilestoneSetup';
-import ProjectVendorSelection from '@/components/projects/ProjectVendorSelection';
+import { useState } from "react";
+import ProjectBasicInfo from "@/components/projects/ProjectBasicInfo";
+import ProjectMilestoneSetup from "@/components/projects/ProjectMilestoneSetup";
+import ProjectVendorSelection from "@/components/projects/ProjectVendorSelection";
 
 export default function CreateProjectPage() {
   const [step, setStep] = useState(1);
   const [projectData, setProjectData] = useState({});
 
   const steps = [
-    { number: 1, name: 'Basic Information' },
-    { number: 2, name: 'Milestones' },
-    { number: 3, name: 'Vendor Selection' },
+    { number: 1, name: "Basic Information" },
+    { number: 2, name: "Milestones" },
+    { number: 3, name: "Vendor Selection" },
   ];
 
   return (
@@ -23,14 +23,12 @@ export default function CreateProjectPage() {
             {steps.map((s, i) => (
               <li
                 key={s.name}
-                className={`${i !== steps.length - 1 ? 'pr-8 sm:pr-20' : ''} relative`}
+                className={`${i !== steps.length - 1 ? "pr-8 sm:pr-20" : ""} relative`}
               >
                 <div className="flex items-center">
                   <div
                     className={`${
-                      step >= s.number
-                        ? 'bg-indigo-600'
-                        : 'bg-gray-200'
+                      step >= s.number ? "bg-indigo-600" : "bg-gray-200"
                     } h-8 w-8 rounded-full flex items-center justify-center`}
                   >
                     <span className="text-white">{s.number}</span>
@@ -68,7 +66,7 @@ export default function CreateProjectPage() {
           onBack={() => setStep(2)}
           onSubmit={(data) => {
             // Handle project creation
-            console.log('Final project data:', { ...projectData, ...data });
+            console.log("Final project data:", { ...projectData, ...data });
           }}
         />
       )}

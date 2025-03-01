@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState } from "react";
 
 interface Milestone {
   title: string;
@@ -13,28 +13,40 @@ interface ProjectMilestoneSetupProps {
   onNext: (data: { milestones: Milestone[] }) => void;
 }
 
-export default function ProjectMilestoneSetup({ onBack, onNext }: ProjectMilestoneSetupProps) {
-  const [milestones, setMilestones] = useState<Milestone[]>([{
-    title: '',
-    description: '',
-    amount: '',
-    due_date: ''
-  }]);
+export default function ProjectMilestoneSetup({
+  onBack,
+  onNext,
+}: ProjectMilestoneSetupProps) {
+  const [milestones, setMilestones] = useState<Milestone[]>([
+    {
+      title: "",
+      description: "",
+      amount: "",
+      due_date: "",
+    },
+  ]);
 
   const addMilestone = () => {
-    setMilestones([...milestones, {
-      title: '',
-      description: '',
-      amount: '',
-      due_date: ''
-    }]);
+    setMilestones([
+      ...milestones,
+      {
+        title: "",
+        description: "",
+        amount: "",
+        due_date: "",
+      },
+    ]);
   };
 
-  const updateMilestone = (index: number, field: keyof Milestone, value: string) => {
+  const updateMilestone = (
+    index: number,
+    field: keyof Milestone,
+    value: string,
+  ) => {
     const updatedMilestones = [...milestones];
     updatedMilestones[index] = {
       ...updatedMilestones[index],
-      [field]: value
+      [field]: value,
     };
     setMilestones(updatedMilestones);
   };
@@ -47,11 +59,14 @@ export default function ProjectMilestoneSetup({ onBack, onNext }: ProjectMilesto
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {milestones.map((milestone, index) => (
-        <div key={index} className="bg-white p-6 rounded-lg border border-gray-200">
+        <div
+          key={index}
+          className="bg-white p-6 rounded-lg border border-gray-200"
+        >
           <h3 className="text-lg font-medium text-gray-900 mb-4">
             Milestone {index + 1}
           </h3>
-          
+
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">
@@ -60,7 +75,9 @@ export default function ProjectMilestoneSetup({ onBack, onNext }: ProjectMilesto
               <input
                 type="text"
                 value={milestone.title}
-                onChange={(e) => updateMilestone(index, 'title', e.target.value)}
+                onChange={(e) =>
+                  updateMilestone(index, "title", e.target.value)
+                }
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
             </div>
@@ -71,7 +88,9 @@ export default function ProjectMilestoneSetup({ onBack, onNext }: ProjectMilesto
               </label>
               <textarea
                 value={milestone.description}
-                onChange={(e) => updateMilestone(index, 'description', e.target.value)}
+                onChange={(e) =>
+                  updateMilestone(index, "description", e.target.value)
+                }
                 rows={3}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
@@ -85,7 +104,9 @@ export default function ProjectMilestoneSetup({ onBack, onNext }: ProjectMilesto
                 <input
                   type="number"
                   value={milestone.amount}
-                  onChange={(e) => updateMilestone(index, 'amount', e.target.value)}
+                  onChange={(e) =>
+                    updateMilestone(index, "amount", e.target.value)
+                  }
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                 />
               </div>
@@ -96,7 +117,9 @@ export default function ProjectMilestoneSetup({ onBack, onNext }: ProjectMilesto
                 <input
                   type="date"
                   value={milestone.due_date}
-                  onChange={(e) => updateMilestone(index, 'due_date', e.target.value)}
+                  onChange={(e) =>
+                    updateMilestone(index, "due_date", e.target.value)
+                  }
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                 />
               </div>

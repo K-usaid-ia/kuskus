@@ -1,6 +1,10 @@
 import { Donation } from "@/types/schema";
-  
-export default function RecentDonations({ donations }: { donations: Donation[] }) {
+
+export default function RecentDonations({
+  donations,
+}: {
+  donations: Donation[];
+}) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
       <div className="p-6">
@@ -26,11 +30,13 @@ export default function RecentDonations({ donations }: { donations: Donation[] }
                   </p>
                 </div>
               </div>
-              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                donation.status === 'confirmed' 
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-yellow-100 text-yellow-800'
-              }`}>
+              <span
+                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  donation.status === "confirmed"
+                    ? "bg-green-100 text-green-800"
+                    : "bg-yellow-100 text-yellow-800"
+                }`}
+              >
                 {donation.status}
               </span>
             </div>

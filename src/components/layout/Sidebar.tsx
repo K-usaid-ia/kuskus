@@ -9,16 +9,18 @@ import {
   CurrencyDollarIcon,
   Cog6ToothIcon,
 } from '@heroicons/react/24/outline';
+import { useAuth } from '@/features/auth/AuthContext';
 
 const Sidebar = () => {
   const pathname = usePathname();
-
+  const { isAuthenticated, user } = useAuth();
+  
+  // Simplified navigation for MVP
   const navigationItems = [
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
     { name: 'Projects', href: '/projects', icon: FolderIcon },
-    { name: 'Vendors', href: '/vendors', icon: UserGroupIcon },
-    { name: 'Donations', href: '/donations', icon: CurrencyDollarIcon },
-    { name: 'Settings', href: '/settings', icon: Cog6ToothIcon },
+    { name: 'Your Donations', href: '/donations', icon: CurrencyDollarIcon },
+    { name: 'Verified Vendors', href: '/vendors', icon: UserGroupIcon },
   ];
 
   return (
@@ -54,15 +56,23 @@ const Sidebar = () => {
 
         {/* User Profile Section */}
         <div className="flex items-center p-4 border-t border-gray-200">
-          <div className="flex-shrink-0">
-            <div className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center">
-              <span className="text-white text-sm font-medium">JD</span>
-            </div>
-          </div>
-          <div className="ml-3">
-            <p className="text-sm font-medium text-gray-700">John Doe</p>
-            <p className="text-xs text-gray-500">Donor</p>
-          </div>
+          {isAuthenticated && user ? (
+            <>
+              <div className="flex-shrink-0">
+                <div className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">
+                    {user.username.substring(0, 2).toUpperCase()}
+                  </span>
+                </div>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-700">{user.username}</p>
+                <p className="text-xs text-gray-500">{user.user_type}</p>
+              </div>
+            </>
+          ) : (
+            <p className="text-sm text-gray-500">Not connected</p>
+          )}
         </div>
       </div>
     </div>

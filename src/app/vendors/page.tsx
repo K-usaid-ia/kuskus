@@ -9,7 +9,7 @@ export default function VendorsPage() {
         <h1 className="text-3xl font-bold text-gray-900">Verified Vendors</h1>
         <button className="btn-primary">Register as Vendor</button>
       </div>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <VendorFilters />
         <div className="lg:col-span-3">

@@ -1,20 +1,23 @@
-'use client';
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { User } from '@/types/schema';
-import { mockUsers } from '@/utils/mockData';
+"use client";
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { User } from "@/types/schema";
+import { mockUsers } from "@/utils/mockData";
 
 interface WalletSettingsProps {
   user?: User;
   onUpdate?: (walletAddress: string) => Promise<void>;
 }
 
-export default function WalletSettings({ user = mockUsers[0], onUpdate }: WalletSettingsProps) {
-  const [walletAddress, setWalletAddress] = useState(user.wallet_address || '');
+export default function WalletSettings({
+  user = mockUsers[0],
+  onUpdate,
+}: WalletSettingsProps) {
+  const [walletAddress, setWalletAddress] = useState(user.wallet_address || "");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -26,7 +29,7 @@ export default function WalletSettings({ user = mockUsers[0], onUpdate }: Wallet
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValidEthereumAddress(walletAddress)) {
-      setError('Invalid Ethereum address format');
+      setError("Invalid Ethereum address format");
       return;
     }
 
@@ -38,7 +41,9 @@ export default function WalletSettings({ user = mockUsers[0], onUpdate }: Wallet
       await onUpdate?.(walletAddress);
       setSuccess(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update wallet address');
+      setError(
+        err instanceof Error ? err.message : "Failed to update wallet address",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -58,7 +63,9 @@ export default function WalletSettings({ user = mockUsers[0], onUpdate }: Wallet
           )}
           {success && (
             <Alert>
-              <AlertDescription>Wallet address updated successfully!</AlertDescription>
+              <AlertDescription>
+                Wallet address updated successfully!
+              </AlertDescription>
             </Alert>
           )}
 
@@ -73,12 +80,13 @@ export default function WalletSettings({ user = mockUsers[0], onUpdate }: Wallet
               required
             />
             <p className="text-sm text-gray-500">
-              Enter your Ethereum wallet address to receive payments and manage transactions
+              Enter your Ethereum wallet address to receive payments and manage
+              transactions
             </p>
           </div>
 
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Updating...' : 'Update Wallet'}
+            {isLoading ? "Updating..." : "Update Wallet"}
           </Button>
         </form>
       </CardContent>

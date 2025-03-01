@@ -1,22 +1,22 @@
 "use client";
-import { useState } from 'react';
-import { Donation } from '@/types/schema';
-import { mockProjects } from '@/utils/mockData';
+import { useState } from "react";
+import { Donation } from "@/types/schema";
+import { mockProjects } from "@/utils/mockData";
 
 interface DonationListProps {
   donations: Donation[];
 }
 
 export default function DonationList({ donations }: DonationListProps) {
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState("all");
 
   const getProjectTitle = (projectId: string) => {
-    const project = mockProjects.find(p => p.id === projectId);
-    return project?.title || 'Unknown Project';
+    const project = mockProjects.find((p) => p.id === projectId);
+    return project?.title || "Unknown Project";
   };
 
-  const filteredDonations = donations.filter(donation => {
-    if (filter === 'all') return true;
+  const filteredDonations = donations.filter((donation) => {
+    if (filter === "all") return true;
     return donation.status === filter;
   });
 
@@ -41,7 +41,7 @@ export default function DonationList({ donations }: DonationListProps) {
       </div>
 
       <ul className="divide-y divide-gray-200">
-        {filteredDonations.map(donation => (
+        {filteredDonations.map((donation) => (
           <li key={donation.id} className="px-4 py-4 sm:px-6">
             <div className="flex items-center justify-between">
               <div>
@@ -53,11 +53,15 @@ export default function DonationList({ donations }: DonationListProps) {
                 </p>
               </div>
               <div className="flex flex-col items-end">
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  donation.status === 'confirmed' ? 'bg-green-100 text-green-800' :
-                  donation.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-red-100 text-red-800'
-                }`}>
+                <span
+                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    donation.status === "confirmed"
+                      ? "bg-green-100 text-green-800"
+                      : donation.status === "pending"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-red-100 text-red-800"
+                  }`}
+                >
                   {donation.status}
                 </span>
                 <span className="mt-1 text-xs text-gray-500">

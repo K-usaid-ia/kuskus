@@ -1,23 +1,26 @@
 "use client";
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { User } from '@/types/schema';
-import { mockUsers } from '@/utils/mockData';
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { User } from "@/types/schema";
+import { mockUsers } from "@/utils/mockData";
 
 interface ProfileSettingsProps {
   user?: User;
   onSave?: (userData: Partial<User>) => Promise<void>;
 }
 
-export default function ProfileSettings({ user = mockUsers[0], onSave }: ProfileSettingsProps) {
+export default function ProfileSettings({
+  user = mockUsers[0],
+  onSave,
+}: ProfileSettingsProps) {
   const [formData, setFormData] = useState({
     name: user.name,
     email: user.email,
-    phone_number: user.phone_number || ''
+    phone_number: user.phone_number || "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +36,7 @@ export default function ProfileSettings({ user = mockUsers[0], onSave }: Profile
       await onSave?.(formData);
       setSuccess(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update profile');
+      setError(err instanceof Error ? err.message : "Failed to update profile");
     } finally {
       setIsLoading(false);
     }
@@ -62,7 +65,9 @@ export default function ProfileSettings({ user = mockUsers[0], onSave }: Profile
             <Input
               id="name"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               required
             />
           </div>
@@ -73,7 +78,9 @@ export default function ProfileSettings({ user = mockUsers[0], onSave }: Profile
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               required
             />
           </div>
@@ -84,13 +91,15 @@ export default function ProfileSettings({ user = mockUsers[0], onSave }: Profile
               id="phone"
               type="tel"
               value={formData.phone_number}
-              onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, phone_number: e.target.value })
+              }
               placeholder="+1234567890"
             />
           </div>
 
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Saving...' : 'Save Changes'}
+            {isLoading ? "Saving..." : "Save Changes"}
           </Button>
         </form>
       </CardContent>

@@ -9,7 +9,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
     const variants = {
       default: "bg-background text-foreground",
       destructive:
-        "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive"
+        "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
     };
 
     return (
@@ -20,7 +20,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
         {...props}
       />
     );
-  }
+  },
 );
 Alert.displayName = "Alert";
 
@@ -49,4 +49,3 @@ const AlertDescription = React.forwardRef<
 AlertDescription.displayName = "AlertDescription";
 
 export { Alert, AlertTitle, AlertDescription };
-

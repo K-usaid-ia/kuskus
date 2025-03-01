@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { Project } from '@/types/schema';
+import { FC } from "react";
+import { Project } from "@/types/schema";
 
 interface ProjectCardProps {
   project: Project;
@@ -14,10 +14,13 @@ const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
         <span className="text-lg font-bold">
           ${project.budget.toLocaleString()}
         </span>
-        <span className={`px-3 py-1 rounded-full ${
-          project.status === 'active' ? 'bg-green-100 text-green-800' : 
-          'bg-gray-100 text-gray-800'
-        }`}>
+        <span
+          className={`px-3 py-1 rounded-full ${
+            project.status === "active"
+              ? "bg-green-100 text-green-800"
+              : "bg-gray-100 text-gray-800"
+          }`}
+        >
           {project.status}
         </span>
       </div>
@@ -25,7 +28,7 @@ const ProjectCard: FC<ProjectCardProps> = ({ project }) => {
         <div className="mt-4">
           <h4 className="font-semibold mb-2">Milestones</h4>
           <div className="space-y-2">
-            {project.milestones.map(milestone => (
+            {project.milestones.map((milestone) => (
               <div key={milestone.id} className="flex justify-between">
                 <span>{milestone.title}</span>
                 <span>${milestone.amount.toLocaleString()}</span>

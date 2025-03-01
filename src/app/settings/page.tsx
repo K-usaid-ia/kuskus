@@ -1,8 +1,8 @@
-import { Suspense } from 'react';
-import LoadingSpinner from '@/components/common/LoadingSpinner';
-import ProfileSettings from '@/components/settings/ProfileSettings';
-import WalletSettings from '@/components/settings/WalletSettings';
-import NotificationSettings from '@/components/settings/NotificationSettings';
+import { Suspense } from "react";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import ProfileSettings from "@/components/settings/ProfileSettings";
+import WalletSettings from "@/components/settings/WalletSettings";
+import NotificationSettings from "@/components/settings/NotificationSettings";
 
 export default function SettingsPage() {
   return (

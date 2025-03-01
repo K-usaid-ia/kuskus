@@ -1,10 +1,14 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import ActivityItem from './ActivityItem';
+import { useState, useEffect } from "react";
+import ActivityItem from "./ActivityItem";
 
-type ActivityStatus = 'completed' | 'pending' | 'failed';
-type ActivityType = 'donation' | 'milestone' | 'vendor_verification' | 'project_creation';
+type ActivityStatus = "completed" | "pending" | "failed";
+type ActivityType =
+  | "donation"
+  | "milestone"
+  | "vendor_verification"
+  | "project_creation";
 
 interface BaseActivity {
   id: string;
@@ -14,60 +18,64 @@ interface BaseActivity {
 }
 
 interface DonationActivity extends BaseActivity {
-  type: 'donation';
+  type: "donation";
   data: {
     amount: number;
     projectTitle: string;
     transactionHash: string;
-  }
+  };
 }
 
 interface MilestoneActivity extends BaseActivity {
-  type: 'milestone';
+  type: "milestone";
   data: {
     projectTitle: string;
     milestoneTitle: string;
-  }
+  };
 }
 
 interface VendorVerificationActivity extends BaseActivity {
-  type: 'vendor_verification';
+  type: "vendor_verification";
   data: {
     vendorName: string;
-  }
+  };
 }
 
 interface ProjectCreationActivity extends BaseActivity {
-  type: 'project_creation';
+  type: "project_creation";
   data: {
     projectTitle: string;
-  }
+  };
 }
 
-type Activity = DonationActivity | MilestoneActivity | VendorVerificationActivity | ProjectCreationActivity;
+type Activity =
+  | DonationActivity
+  | MilestoneActivity
+  | VendorVerificationActivity
+  | ProjectCreationActivity;
 
 const mockActivities: Activity[] = [
   {
-    id: '1',
-    type: 'donation',
-    status: 'completed',
+    id: "1",
+    type: "donation",
+    status: "completed",
     timestamp: new Date().toISOString(),
     data: {
       amount: 5000,
-      projectTitle: 'School Construction in Kumasi',
-      transactionHash: '0x1234567890abcdef1234567890abcdef12345678'
-    }
+      projectTitle: "School Construction in Kumasi",
+      transactionHash: "0x1234567890abcdef1234567890abcdef12345678",
+    },
   },
   {
-    id: '2',
-    type: 'milestone',
-    status: 'pending',
+    id: "2",
+    type: "milestone",
+    status: "pending",
     timestamp: new Date(Date.now() - 3600000).toISOString(),
     data: {
-      projectTitle: 'Medical Supplies Distribution',
-      milestoneTitle: 'Supply Delivery Phase 1'
-    }
-  }
+      projectTitle: "Medical Supplies Distribution",
+      milestoneTitle: "Supply Delivery Phase 1",
+    },
+  },
 ];
 
 export default function ActivityFeed() {
@@ -80,16 +88,16 @@ export default function ActivityFeed() {
       if (Math.random() > 0.7) {
         const newActivity: DonationActivity = {
           id: Date.now().toString(),
-          type: 'donation',
-          status: 'completed',
+          type: "donation",
+          status: "completed",
           timestamp: new Date().toISOString(),
           data: {
             amount: Math.floor(Math.random() * 10000),
-            projectTitle: 'School Construction in Kumasi',
+            projectTitle: "School Construction in Kumasi",
             transactionHash: `0x${Math.random().toString(16).slice(2)}`,
-          }
+          },
         };
-        setActivities(prev => [newActivity, ...prev].slice(0, 10));
+        setActivities((prev) => [newActivity, ...prev].slice(0, 10));
       }
     }, 5000);
 

@@ -1,32 +1,32 @@
 "use client";
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function VendorVerification() {
   const router = useRouter();
   const [documents, setDocuments] = useState({
     business_license: null,
     tax_certificate: null,
-    identity_proof: null
+    identity_proof: null,
   });
   const [uploading, setUploading] = useState(false);
 
   const handleFileChange = (documentType: string, file: File) => {
-    setDocuments(prev => ({
+    setDocuments((prev) => ({
       ...prev,
-      [documentType]: file
+      [documentType]: file,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setUploading(true);
-    
+
     // Simulate upload delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     setUploading(false);
-    router.push('/vendors/registration-complete');
+    router.push("/vendors/registration-complete");
   };
 
   return (
@@ -34,8 +34,16 @@ export default function VendorVerification() {
       <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
         <div className="flex">
           <div className="flex-shrink-0">
-            <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            <svg
+              className="h-5 w-5 text-yellow-400"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                clipRule="evenodd"
+              />
             </svg>
           </div>
           <div className="ml-3">
@@ -78,14 +86,14 @@ export default function VendorVerification() {
                     name="business-license"
                     type="file"
                     className="sr-only"
-                    onChange={(e) => handleFileChange('business_license', e.target.files[0])}
+                    onChange={(e) =>
+                      handleFileChange("business_license", e.target.files[0])
+                    }
                   />
                 </label>
                 <p className="pl-1">or drag and drop</p>
               </div>
-              <p className="text-xs text-gray-500">
-                PNG, JPG, PDF up to 10MB
-              </p>
+              <p className="text-xs text-gray-500">PNG, JPG, PDF up to 10MB</p>
             </div>
           </div>
         </div>
@@ -98,7 +106,7 @@ export default function VendorVerification() {
             disabled={uploading}
             className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400"
           >
-            {uploading ? 'Uploading...' : 'Submit for Verification'}
+            {uploading ? "Uploading..." : "Submit for Verification"}
           </button>
         </div>
       </form>

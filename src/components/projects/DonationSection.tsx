@@ -1,23 +1,23 @@
 "use client";
-import { useState } from 'react';
-import { Project } from '@/types/schema';
+import { useState } from "react";
+import { Project } from "@/types/schema";
 
 interface DonationSectionProps {
   project: Project;
 }
 
 export default function DonationSection({ project }: DonationSectionProps) {
-  const [amount, setAmount] = useState('');
-  
+  const [amount, setAmount] = useState("");
+
   const handleDonate = async () => {
     // Handle donation logic here
-    console.log('Donating:', amount);
+    console.log("Donating:", amount);
   };
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
       <h3 className="text-lg font-medium text-gray-900">Make a Donation</h3>
-      
+
       <div className="mt-4">
         <label className="block text-sm font-medium text-gray-700">
           Amount (USD)
@@ -45,7 +45,9 @@ export default function DonationSection({ project }: DonationSectionProps) {
       </button>
 
       <div className="mt-4 text-sm text-gray-500">
-        <p>Your donation will be safely processed using blockchain technology.</p>
+        <p>
+          Your donation will be safely processed using blockchain technology.
+        </p>
       </div>
     </div>
   );
