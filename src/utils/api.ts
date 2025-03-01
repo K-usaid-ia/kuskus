@@ -107,8 +107,15 @@ export const donationsApi = {
 
 
 // Vendors API
+interface VendorsApiResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: any[]; // Replace 'any' with your Vendor type
+}
+
 export const vendorsApi = {
-  getAllVendors: async () => {
+  getAllVendors: async (): Promise<VendorsApiResponse> => {
     const response = await api.get("/vendors/");
     return response.data;
   },
