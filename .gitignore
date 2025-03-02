@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Ignore the contracts folder
+contracts/
+
+# Ignore the deploy_contracts.js file
+deploy_contracts.js
+

@@ -75,10 +75,16 @@ export const projectsApi = {
     return response.data;
   },
   
-  donate: async (projectId: string, amount: number) => {
+  donate: async (projectId: string, amount: number, feeDetails?: {
+    service_fee: number;
+    total_amount: number;
+    project_amount: number;
+    donor_covered_fee: boolean;
+  }) => {
     const response = await api.post('/donations/', {
       project: projectId,
-      amount
+      amount,
+      ...(feeDetails || {})
     });
     return response.data;
   }
