@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { BellIcon } from "@heroicons/react/24/outline";
 import { useAuth } from "@/features/auth/AuthContext";
+import NotificationBell from '@/components/common/NotificationBell';
 
 const Header = () => {
   const [notifications, setNotifications] = useState(3); // Mock notification count
@@ -23,28 +24,17 @@ const Header = () => {
 
           {/* Right Section */}
           <div className="flex items-center space-x-4">
-            {/* Notification Bell */}
-            <button
-              type="button"
-              className="relative p-2 text-gray-400 hover:text-gray-500"
-            >
-              <BellIcon className="h-6 w-6" />
-              {notifications > 0 && (
-                <span className="absolute top-0 right-0 -mt-1 -mr-1 h-5 w-5 rounded-full bg-red-500 flex items-center justify-center">
-                  <span className="text-xs text-white">{notifications}</span>
-                </span>
-              )}
-            </button>
+            {/* Notification Bell - Only show when authenticated */}
+            {isAuthenticated && <NotificationBell />}
 
-            {/* Wallet Button */}
+            {/* Wallet Connection */}
             {!isAuthenticated ? (
               <button
                 type="button"
                 onClick={connectWallet}
-                disabled={wallet.isConnecting}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                {wallet.isConnecting ? "Connecting..." : "Connect Wallet"}
+                Connect Wallet
               </button>
             ) : (
               <div className="flex items-center space-x-2">

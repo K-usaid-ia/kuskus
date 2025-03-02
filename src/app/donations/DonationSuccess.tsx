@@ -1,6 +1,8 @@
 // src/components/donations/DonationSuccess.tsx
 import React from 'react';
+import { useEffect } from 'react';
 import { useClientSideFormatting } from '@/app/hooks/useClientSideFormatting';
+import { useNotifications } from '@/features/notifications/NotificationContext';
 
 interface DonationSuccessProps {
   amount: number;
@@ -14,6 +16,11 @@ const DonationSuccess: React.FC<DonationSuccessProps> = ({
   transactionHash
 }) => {
   const { formatCurrency } = useClientSideFormatting();
+  const { loadNotifications } = useNotifications();
+
+  useEffect(() => {
+    loadNotifications();
+  }, [loadNotifications]);
 
   return (
     <div className="bg-green-50 border border-green-200 rounded-md p-4 mt-4 mb-6">

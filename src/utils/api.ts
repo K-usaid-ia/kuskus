@@ -149,3 +149,39 @@ export const vendorsApi = {
     return response.data;
   },
 };
+
+// Notifications API
+interface NotificationsApiResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: any[]; // Replace 'any' with your Notification type
+}
+
+export const notificationsApi = {
+
+  getAll: async (): Promise<NotificationsApiResponse> => {
+    const response = await api.get('/notifications/');
+    return response.data;
+  },
+  
+  getUnread: async (): Promise<NotificationsApiResponse> => {
+    const response = await api.get('/notifications/unread/');
+    return response.data;
+  },
+  
+  getUnreadCount: async (): Promise<{ count: number }> => {
+    const response = await api.get('/notifications/unread_count/');
+    return response.data;
+  },
+  
+  markAsRead: async (notificationId: string | number) => {
+    const response = await api.post(`/notifications/${notificationId}/mark_read/`);
+    return response.data;
+  },
+  
+  markAllAsRead: async () => {
+    const response = await api.post('/notifications/mark_all_read/');
+    return response.data;
+  }
+};
