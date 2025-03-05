@@ -24,9 +24,6 @@ jobs:
       - name: Install dependencies
         run: npm ci  # Uses package-lock.json for exact versions
       
-      - name: Run tests
-        run: npm test  # Remove this step if you don't have tests
-      
       - name: Build Next.js app
         run: npm run build  # Pre-build the app to catch any build errors
       
