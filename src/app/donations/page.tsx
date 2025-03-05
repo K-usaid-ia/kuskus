@@ -127,7 +127,7 @@ export default function DonationsPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">${formatCurrency(donation.amount)}</div>
+                        <div className="text-sm text-gray-900">{formatCurrency(donation.amount)}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-500">

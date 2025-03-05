@@ -1,0 +1,42 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches:
+      - main  # Or your default branch name (could be 'master')
+  pull_request:
+    branches:
+      - main  # Or your default branch name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Choose an appropriate Node.js version for your project
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci  # Uses package-lock.json for exact versions
+      
+      - name: Run tests
+        run: npm test  # Remove this step if you don't have tests
+      
+      - name: Build Next.js app
+        run: npm run build  # Pre-build the app to catch any build errors
+      
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25  # Using a community action for Vercel deployments
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}  # Your Vercel API token
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}  # Your Vercel organization ID
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}  # Your Vercel project ID
+          working-directory: ./  # Adjust if your Next.js app is in a subdirectory
+          github-comment: true  # Add deployment URL as a comment in pull requests
+          vercel-args: '--prod'  # Deploy to production for main branch pushes
+          

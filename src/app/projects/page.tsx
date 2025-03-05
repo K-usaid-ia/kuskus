@@ -95,7 +95,7 @@ export default function ProjectsPage() {
                         <span className="capitalize">{project.status}</span>
                       </div>
                       <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                        <span>Budget: ${formatCurrency(project.budget)}</span>
+                        <span>Budget: {formatCurrency(project.budget)}</span>
                       </div>
                     </div>
                     <p className="mt-2 text-sm text-gray-500 line-clamp-2">

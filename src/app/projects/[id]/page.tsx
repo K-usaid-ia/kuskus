@@ -198,7 +198,7 @@ const handleDonate = async () => {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Budget</p>
-                  <p className="font-medium">${formatCurrency(project.budget)}</p>
+                  <p className="font-medium">{formatCurrency(project.budget)}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Start Date</p>

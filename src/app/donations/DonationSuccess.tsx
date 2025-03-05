@@ -33,7 +33,7 @@ const DonationSuccess: React.FC<DonationSuccessProps> = ({
         <div className="ml-3">
           <h3 className="text-sm font-medium text-green-800">Donation Successful!</h3>
           <div className="mt-2 text-sm text-green-700">
-            <p>Thank you for your generous donation of <strong>${formatCurrency(amount)}</strong> to <strong>{projectTitle}</strong>.</p>
+            <p>Thank you for your generous donation of <strong>{formatCurrency(amount)}</strong> to <strong>{projectTitle}</strong>.</p>
             
             {transactionHash && !transactionHash.startsWith('pending_') && (
               <div className="mt-2">

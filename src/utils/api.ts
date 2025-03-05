@@ -151,37 +151,68 @@ export const vendorsApi = {
 };
 
 // Notifications API
+// Define API response types
 interface NotificationsApiResponse {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: any[]; // Replace 'any' with your Notification type
+  results: Notification[];
+}
+
+interface Notification {
+  id: number;
+  message: string;
+  type: string;
+  read: boolean;
+  action_url: string | null;
+  created_at: string;
 }
 
 export const notificationsApi = {
-
   getAll: async (): Promise<NotificationsApiResponse> => {
-    const response = await api.get('/notifications/');
-    return response.data;
+    try {
+      const response = await api.get("/notifications/");
+      return response.data;
+    } catch (error) {
+      console.error("❌ Error fetching all notifications:", error);
+      return { results: [] }; // Return an empty array if request fails
+    }
   },
-  
+
   getUnread: async (): Promise<NotificationsApiResponse> => {
-    const response = await api.get('/notifications/unread/');
-    return response.data;
+    try {
+      const response = await api.get("/notifications/unread/");
+      return response.data;
+    } catch (error) {
+      console.error("❌ Error fetching unread notifications:", error);
+      return { results: [] };
+    }
   },
-  
+
   getUnreadCount: async (): Promise<{ count: number }> => {
-    const response = await api.get('/notifications/unread_count/');
-    return response.data;
+    try {
+      const response = await api.get("/notifications/unread_count/");
+      return response.data;
+    } catch (error) {
+      console.error("❌ Error fetching unread notifications count:", error);
+      return { count: 0 }; // Return zero if the request fails
+    }
   },
-  
-  markAsRead: async (notificationId: string | number) => {
-    const response = await api.post(`/notifications/${notificationId}/mark_read/`);
-    return response.data;
+
+  markAsRead: async (notificationId: string | number): Promise<boolean> => {
+    try {
+      await api.post(`/notifications/${notificationId}/mark_read/`);
+      return true; // Return success
+    } catch (error) {
+      console.error(`❌ Error marking notification ${notificationId} as read:`, error);
+      return false; // Return false on failure
+    }
   },
-  
-  markAllAsRead: async () => {
-    const response = await api.post('/notifications/mark_all_read/');
-    return response.data;
-  }
+
+  markAllAsRead: async (): Promise<boolean> => {
+    try {
+      await api.post("/notifications/mark_all_read/");
+      return true;
+    } catch (error) {
+      console.error("❌ Error marking all notifications as read:", error);
+      return false;
+    }
+  },
 };

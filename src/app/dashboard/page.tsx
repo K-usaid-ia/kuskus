@@ -103,7 +103,7 @@ export default function DashboardPage() {
               <dl className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div>
                   <dt className="text-sm font-medium text-gray-500">Total Donated</dt>
-                  <dd className="mt-1 text-3xl font-semibold text-indigo-600">${formatCurrency(donationSummary.total)}</dd>
+                  <dd className="mt-1 text-3xl font-semibold text-indigo-600">{formatCurrency(donationSummary.total)}</dd>
                 </div>
                 <div>
                   <dt className="text-sm font-medium text-gray-500">Donations Made</dt>
