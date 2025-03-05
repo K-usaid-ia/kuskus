@@ -103,7 +103,7 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
-    if (!isAuthenticated || !authToken) {
+    if (!isAuthenticated || !accessToken) {
       // Don't attempt to connect if the user isn't authenticated or we don't have a token
       return;
     }
