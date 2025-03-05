@@ -254,7 +254,7 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
         clearTimeout(reconnectTimer);
       }
     };
-  }, [isAuthenticated, authToken]);
+  }, [isAuthenticated, accessToken]);
 
   // // Set up WebSocket connection for real-time notifications
   // useEffect(() => {
