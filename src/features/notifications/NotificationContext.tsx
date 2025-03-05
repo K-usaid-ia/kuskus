@@ -101,88 +101,125 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !authToken) {
+        // Don't attempt to connect if the user isn't authenticated or we don't have a token
+        return;
+    }
+    
+    let reconnectAttempts = 0;
+    const MAX_RECONNECT_ATTEMPTS = 5;
+    let reconnectTimer = null;
     
     const connectWebSocket = () => {
-      let wsUrl;
-      
-      try {
-        // Determine the correct WebSocket URL based on environment
-        if (process.env.NEXT_PUBLIC_WS_URL) {
-          // Get the host from environment variable
-          const wsHost = process.env.NEXT_PUBLIC_WS_URL;
-          
-          // Choose the appropriate WebSocket protocol based on the current page's protocol
-          const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-          
-          // Construct the complete WebSocket URL with the correct protocol and path
-          wsUrl = `${wsProtocol}//${wsHost}/ws/notifications/`;
-        } else {
-          // Fallback for when the environment variable isn't set
-          const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-          const wsHost = window.location.hostname === 'localhost' ? 
-                        'localhost:8000' : 'kusaidia-web.onrender.com';
-          wsUrl = `${wsProtocol}//${wsHost}/ws/notifications/`;
-        }
+        let wsUrl;
         
-        console.log('Connecting to WebSocket at:', wsUrl);
-        const ws = new WebSocket(wsUrl);
-        
-        // Handle successful connection
-        ws.onopen = () => {
-          console.log('WebSocket connected successfully');
-          setWsConnected(true);
-        };
-        
-        // Handle incoming messages
-        ws.onmessage = (event) => {
-          try {
-            const data = JSON.parse(event.data);
-            
-            if (data.type === 'notification') {
-              // Process new notification
-              const newNotification = data.notification;
-              setNotifications(prev => [newNotification, ...prev]);
-              setUnreadCount(prev => prev + 1);
-              
-              // Show browser notification if supported and permitted
-              if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification('KUSAIDIA Notification', {
-                  body: newNotification.message
-                });
-              }
-            } else if (data.type === 'unread_count') {
-              // Update unread notification count
-              setUnreadCount(data.count);
+        try {
+            // Determine the WebSocket URL based on environment
+            if (process.env.NEXT_PUBLIC_WS_URL) {
+                const wsHost = process.env.NEXT_PUBLIC_WS_URL;
+                const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                
+                // Add the token as a query parameter for authentication
+                wsUrl = `${wsProtocol}//${wsHost}/ws/notifications/?token=${authToken}`;
+            } else {
+                const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                const wsHost = window.location.hostname === 'localhost' ? 
+                            'localhost:8000' : 'kusaidia-web.onrender.com';
+                
+                // Add the token as a query parameter for authentication
+                wsUrl = `${wsProtocol}//${wsHost}/ws/notifications/?token=${authToken}`;
             }
-          } catch (parseError) {
-            console.error('Error parsing WebSocket message:', parseError);
-          }
-        };
-        
-        // Handle connection closure
-        ws.onclose = (event) => {
-          console.log('WebSocket disconnected:', event.code, event.reason);
-          setWsConnected(false);
-          
-          // Try to reconnect after a delay
-          setTimeout(connectWebSocket, 3000);
-        };
-        
-        // Handle connection errors
-        ws.onerror = (error) => {
-          console.error('WebSocket error:', error);
-          ws.close();
-        };
-        
-        // Store the WebSocket connection
-        setSocket(ws);
-      } catch (error) {
-        console.error('Error establishing WebSocket connection:', error);
-        
-        // Try to reconnect after a longer delay
-        setTimeout(connectWebSocket, 5000);
-      }
+            
+            console.log('Connecting to WebSocket at:', wsUrl);
+            const ws = new WebSocket(wsUrl);
+            
+            // Set a connection timeout
+            const connectionTimeout = setTimeout(() => {
+                if (ws.readyState !== WebSocket.OPEN) {
+                    console.log("WebSocket connection timeout");
+                    ws.close();
+                }
+            }, 10000);
+            
+            ws.onopen = () => {
+                console.log('WebSocket connected successfully');
+                clearTimeout(connectionTimeout);
+                setWsConnected(true);
+                reconnectAttempts = 0; // Reset counter on successful connection
+            };
+            
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    
+                    if (data.type === 'notification') {
+                        const newNotification = data.notification;
+                        setNotifications(prev => [newNotification, ...prev]);
+                        setUnreadCount(prev => prev + 1);
+                        
+                        if ('Notification' in window && Notification.permission === 'granted') {
+                            new Notification('KUSAIDIA Notification', {
+                                body: newNotification.message
+                            });
+                        }
+                    } else if (data.type === 'unread_count') {
+                        setUnreadCount(data.count);
+                    }
+                } catch (parseError) {
+                    console.error('Error parsing WebSocket message:', parseError);
+                }
+            };
+            
+            ws.onclose = (event) => {
+                console.log('WebSocket disconnected:', event.code, event.reason);
+                clearTimeout(connectionTimeout);
+                setWsConnected(false);
+                
+                // Don't try to reconnect if we're not authenticated anymore
+                if (!isAuthenticated) return;
+                
+                // Implement exponential backoff for reconnection attempts
+                if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+                    const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
+                    console.log(`Attempting to reconnect in ${delay}ms (Attempt ${reconnectAttempts + 1}/${MAX_RECONNECT_ATTEMPTS})`);
+                    
+                    reconnectTimer = setTimeout(() => {
+                        reconnectAttempts++;
+                        connectWebSocket();
+                    }, delay);
+                } else {
+                    console.log("Max reconnection attempts reached, falling back to polling");
+                    
+                    // Set up polling as a fallback mechanism
+                    const pollingInterval = setInterval(() => {
+                        if (isAuthenticated) {
+                            loadNotifications();
+                        } else {
+                            clearInterval(pollingInterval);
+                        }
+                    }, 30000); // Poll every 30 seconds
+                }
+            };
+            
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                clearTimeout(connectionTimeout);
+                // No need to call ws.close() here as onclose will be triggered automatically
+            };
+            
+            setSocket(ws);
+        } catch (error) {
+            console.error('Error establishing WebSocket connection:', error);
+            
+            // Try to reconnect with exponential backoff
+            if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+                const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
+                reconnectTimer = setTimeout(() => {
+                    reconnectAttempts++;
+                    connectWebSocket();
+                }, delay);
+            }
+        }
     };
     
     // Initialize the WebSocket connection
@@ -191,18 +228,22 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
     // Load existing notifications from the API
     loadNotifications();
     
-    // Request browser notification permission if not already granted
+    // Request browser notification permission
     if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission();
+        Notification.requestPermission();
     }
     
-    // Cleanup function to close WebSocket when component unmounts
+    // Cleanup function
     return () => {
-      if (socket) {
-        socket.close();
-      }
+        if (socket) {
+            socket.close();
+        }
+        
+        if (reconnectTimer) {
+            clearTimeout(reconnectTimer);
+        }
     };
-  }, [isAuthenticated]);
+}, [isAuthenticated, authToken]); 
 
   // // Set up WebSocket connection for real-time notifications
   // useEffect(() => {
