@@ -9,6 +9,7 @@ interface Milestone {
 }
 
 interface ProjectMilestoneSetupProps {
+  existingData?: any;
   onBack: () => void;
   onNext: (data: { milestones: Milestone[] }) => void;
 }

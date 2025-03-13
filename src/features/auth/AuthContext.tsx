@@ -15,11 +15,13 @@ import { useRouter } from "next/navigation";
 // API URLs
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
-const AUTH_ENDPOINTS = {
-  NONCE: `${API_BASE_URL}/auth/nonce/`,
-  VERIFY: `${API_BASE_URL}/auth/verify/`,
-  ME: `${API_BASE_URL}/auth/me/`,
-};
+  const AUTH_ENDPOINTS = {
+    NONCE: `${API_BASE_URL}/auth/nonce/`,
+    VERIFY: `${API_BASE_URL}/auth/verify/`,
+    ME: `${API_BASE_URL}/auth/me/`,
+    ROLES: `${API_BASE_URL}/auth/roles/`,
+    SWITCH_ROLE: `${API_BASE_URL}/auth/switch-role/`,
+  };
 
 // Types
 export interface User {
@@ -27,6 +29,7 @@ export interface User {
   username: string;
   wallet_address: string;
   user_type: string;
+  verified?: boolean;
 }
 
 interface AuthState {
@@ -43,12 +46,16 @@ interface AuthState {
     access: string | null;
     refresh: string | null;
   };
+  availableRoles: string[];
+  isRoleSwitching: boolean;
 }
 
 interface AuthContextType extends AuthState {
   connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
   getAuthHeaders: () => { Authorization: string } | {};
+  switchRole: (roleType: string) => Promise<void>;
+  addRole: (roleType: string) => Promise<void>;
 }
 
 // Create context
@@ -75,6 +82,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       access: null,
       refresh: null,
     },
+    availableRoles: [],
+    isRoleSwitching: false,
   });
 
   // Initialize from localStorage (for tokens)
@@ -114,10 +123,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     }
   }, []);
 
-  // Fetch user data
+  // Fetch user data and available roles
   const fetchUserData = async (token: string) => {
     try {
-      const response = await axios.get(AUTH_ENDPOINTS.ME, {
+      // Fetch basic user info
+      const userResponse = await axios.get(AUTH_ENDPOINTS.ME, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // Fetch available roles
+      const rolesResponse = await axios.get(AUTH_ENDPOINTS.ROLES, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -125,7 +142,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
       setAuthState((prev) => ({
         ...prev,
-        user: response.data,
+        user: userResponse.data,
+        availableRoles: rolesResponse.data.roles || [],
       }));
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -203,6 +221,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
       const { access, refresh, user } = verifyResponse.data;
 
+      // Fetch available roles
+      const rolesResponse = await axios.get(AUTH_ENDPOINTS.ROLES, {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      });
+
       // Store tokens in localStorage
       localStorage.setItem("access_token", access);
       localStorage.setItem("refresh_token", refresh);
@@ -216,6 +241,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
           access,
           refresh,
         },
+        availableRoles: rolesResponse.data.roles || [],
       }));
 
       // Redirect to dashboard
@@ -247,10 +273,90 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         access: null,
         refresh: null,
       },
+      availableRoles: [],
+      isRoleSwitching: false,
     });
 
     // Redirect to home page
     router.push("/");
+  };
+
+  // Switch to a different role
+  const switchRole = async (roleType: string) => {
+    if (!authState.isAuthenticated || !authState.tokens.access) {
+      throw new Error("Not authenticated");
+    }
+
+    // Don't switch if already on this role
+    if (authState.user?.user_type === roleType) {
+      return;
+    }
+
+    setAuthState((prev) => ({
+      ...prev,
+      isRoleSwitching: true,
+    }));
+
+    try {
+      const response = await axios.post(
+        AUTH_ENDPOINTS.SWITCH_ROLE,
+        { role_type: roleType },
+        {
+          headers: getAuthHeaders(),
+        }
+      );
+
+      const { access, refresh, user } = response.data;
+
+      // Update tokens in localStorage
+      localStorage.setItem("access_token", access);
+      localStorage.setItem("refresh_token", refresh);
+
+      // Update auth state
+      setAuthState((prev) => ({
+        ...prev,
+        user,
+        tokens: {
+          access,
+          refresh,
+        },
+        isRoleSwitching: false,
+      }));
+
+      // Refresh the current page to ensure UI updates
+      router.refresh();
+    } catch (error) {
+      console.error("Error switching role:", error);
+      setAuthState((prev) => ({
+        ...prev,
+        isRoleSwitching: false,
+      }));
+      throw error;
+    }
+  };
+
+  // Add a new role
+  const addRole = async (roleType: string) => {
+    if (!authState.isAuthenticated || !authState.tokens.access) {
+      throw new Error("Not authenticated");
+    }
+
+    try {
+      // Note: This endpoint would need to be implemented on your backend
+      await axios.post(
+        `${API_BASE_URL}/auth/add-role/`,
+        { role_type: roleType },
+        {
+          headers: getAuthHeaders(),
+        }
+      );
+
+      // Refresh user data to get updated roles
+      await fetchUserData(authState.tokens.access);
+    } catch (error) {
+      console.error("Error adding role:", error);
+      throw error;
+    }
   };
 
   // Helper function to get auth headers for API requests
@@ -260,16 +366,70 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       : {};
   };
 
+  // Combine all values and functions for the context
   const contextValue: AuthContextType = {
     ...authState,
     connectWallet,
     disconnectWallet,
     getAuthHeaders,
+    switchRole,
+    addRole,
   };
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
+};
+
+type UserRole = 'donor' | 'organization' | 'vendor' | 'admin';
+
+// Modify your AuthContext to add a useRequiredRole hook
+export const useRequiredRole = (requiredRole: UserRole) => {
+  const { isAuthenticated, user, availableRoles, switchRole, addRole, connectWallet } = useAuth();
+  const [isProcessing, setIsProcessing] = useState(false);
+  
+  // Check if user has the required role
+  const hasRole = isAuthenticated && availableRoles.includes(requiredRole);
+  
+  // Check if user is currently using the required role
+  const isActiveRole = isAuthenticated && user?.user_type === requiredRole;
+  
+  // Function to ensure user has and is using the required role
+  const ensureRole = async () => {
+    if (!isAuthenticated) {
+      // If not authenticated, connect wallet first
+      await connectWallet();
+      return false; // Return false to indicate process is not complete
+    }
+    
+    setIsProcessing(true);
+    
+    try {
+      if (!hasRole) {
+        // If user doesn't have this role, add it
+        await addRole(requiredRole);
+      }
+      
+      if (!isActiveRole) {
+        // If role is not active, switch to it
+        await switchRole(requiredRole);
+      }
+      
+      setIsProcessing(false);
+      return true; // Return true to indicate process is complete
+    } catch (error) {
+      console.error("Error ensuring role:", error);
+      setIsProcessing(false);
+      return false;
+    }
+  };
+  
+  return {
+    hasRole,
+    isActiveRole,
+    ensureRole,
+    isProcessing
+  };
 };
 
 // Custom hook to use auth context

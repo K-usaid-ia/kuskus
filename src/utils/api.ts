@@ -87,6 +87,52 @@ export const projectsApi = {
       ...(feeDetails || {})
     });
     return response.data;
+  },
+  
+  createProject: async (projectData: FormData) => {
+    // Get the authentication token
+    const accessToken = localStorage.getItem('access_token');
+    
+    try {
+      // When using FormData, don't manually set Content-Type
+      // The browser needs to set it with the proper boundary
+      const response = await api.post('/projects/', projectData, {
+        headers: {
+          // Only add the Authorization header
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
+      return response.data;
+    } catch (error: unknown) {
+      console.error('Project creation error:', error);
+      
+      // Re-throw the error so the calling function can handle it
+      throw error;
+    }
+  },
+  
+  updateProject: async (id: string, projectData: FormData) => {
+    const response = await api.put(`/projects/${id}/`, projectData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+  
+  getVendors: async () => {
+    const response = await api.get('/vendors/');
+    return response.data;
+  },
+  
+  createMilestone: async (projectId: string, milestoneData: any) => {
+    const response = await api.post(`/projects/${projectId}/milestones/`, milestoneData);
+    return response.data;
+  },
+  
+  updateMilestone: async (projectId: string, milestoneId: string, milestoneData: any) => {
+    const response = await api.put(`/projects/${projectId}/milestones/${milestoneId}/`, milestoneData);
+    return response.data;
   }
 };
 

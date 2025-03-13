@@ -8,6 +8,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import GasFeeInfo from '@/components/common/GasFeeInfo';
 import DonationSuccess from '../../donations/DonationSuccess';
 import { useClientSideFormatting } from '@/app/hooks/useClientSideFormatting';
+import RoleActionButton from '@/components/RoleActionButton'; 
 
 interface Milestone {
   id: number;
@@ -292,7 +293,19 @@ const handleDonate = async () => {
   <div className="mb-4 text-xs text-gray-500">
     <p>Note: A small blockchain gas fee (typically $0.10-$0.25) will be required to process this transaction on the Celo network.</p>
   </div>
-  
+
+  <RoleActionButton
+  requiredRole="donor"
+  actionDescription="donate to this project"
+  onClick={handleDonate}
+  className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400"
+>
+  {donating 
+    ? 'Processing...' 
+    : `Donate $${calculateTotalAmount().toFixed(2)}`}
+</RoleActionButton>
+
+{/*   
   <button
     type="button"
     onClick={handleDonate}
@@ -304,7 +317,7 @@ const handleDonate = async () => {
       : donating 
         ? 'Processing...' 
         : `Donate $${calculateTotalAmount().toFixed(2)}`}
-  </button>
+  </button> */}
   
   <div className="mt-2">
     <GasFeeInfo isCompact={true} />

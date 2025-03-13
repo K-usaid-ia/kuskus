@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { Project } from "@/types/schema";
+import RoleActionButton from '@/components/RoleActionButton'; // Replace with the actual path to the RoleActionButton component
+
 
 interface DonationSectionProps {
   project: Project;
@@ -43,6 +45,15 @@ export default function DonationSection({ project }: DonationSectionProps) {
       >
         Donate Now
       </button>
+
+      <RoleActionButton
+      requiredRole="donor"
+      actionDescription="donate to this project"
+      onClick={handleDonate}
+      className="w-full px-6 py-3 text-white bg-indigo-600 rounded-md"
+    >
+      Donate Now
+    </RoleActionButton>
 
       <div className="mt-4 text-sm text-gray-500">
         <p>
